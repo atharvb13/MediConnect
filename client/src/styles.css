@@ -1,0 +1,13 @@
+.boxes{
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    margin-top: 40px;
+}
+
+.box{
+  padding: 20px 40px;
+  border: 2px solid black;
+  font-size: 16px;
+  cursor: pointer
+}

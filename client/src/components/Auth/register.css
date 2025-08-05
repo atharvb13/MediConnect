@@ -1,0 +1,226 @@
+
+.register-container {
+  display: flex;
+  height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(120deg, #f3e7fa 0%, #e3f0ff 100%);
+}
+
+.register-left {
+  flex: 1;
+  background-image: url('../../../public/doctor-image.jpg'); 
+  background-size: cover;
+  background-position: center;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  min-width: 320px;
+  box-shadow: 8px 0 24px 0 rgba(122,71,244,0.08);
+}
+
+
+.register-right {
+  flex: 1;
+  background: #ffffff;
+  padding: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  min-width: 320px;
+}
+
+.register-form {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px 0 rgba(122,71,244,0.08);
+  padding: 32px 28px 24px 28px;
+  margin: 0 auto;
+}
+
+.logo-icon {
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #7a47f4;
+}
+
+.register-form h2 {
+  margin-bottom: 25px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #2c2c2c;
+  letter-spacing: 0.5px;
+}
+
+.user-type-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 10px 0;
+  border: 2px solid #e0d7f7;
+  background: #f7f4fd;
+  color: #7a47f4;
+  font-weight: 500;
+  font-size: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
+  box-shadow: 0 2px 8px 0 rgba(122,71,244,0.04);
+}
+
+.toggle-btn.active {
+  background: linear-gradient(90deg, #7a47f4 0%, #a084e8 100%);
+  color: #fff;
+  border-color: #7a47f4;
+  box-shadow: 0 4px 16px 0 rgba(122,71,244,0.10);
+}
+
+.toggle-btn:not(.active):hover {
+  background: #ede7fa;
+  border-color: #c3b3f7;
+}
+
+.google-btn {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: box-shadow 0.2s, border-color 0.2s;
+  box-shadow: 0 2px 8px 0 rgba(122,71,244,0.04);
+}
+
+.google-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+  color: #999;
+}
+
+.divider hr {
+  flex: 1;
+  border: none;
+  height: 1px;
+  background-color: #ccc;
+}
+
+.divider span {
+  padding: 0 10px;
+}
+
+/* Input Fields */
+.register-form input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #f7f4fd;
+  transition: border-color 0.2s;
+}
+
+.register-form input:focus {
+  border-color: #7a47f4;
+  outline: none;
+}
+
+/* Submit Button */
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #7a47f4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 8px 0 rgba(122,71,244,0.08);
+}
+
+.submit-btn:hover {
+  background-color: #5c32c7;
+}
+
+/* Login Text */
+.login-link {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #555;
+}
+
+.login-link a {
+  color: #7a47f4;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* Social Icons */
+.social-icons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 20px;
+}
+
+.social-icons a {
+  text-decoration: none;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #7a47f4;
+}
+
+/* OTP Input Boxes */
+.otp-boxes {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.otp-input {
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+  text-align: center;
+  border: 2px solid #e0d7f7;
+  border-radius: 8px;
+  background: #f7f4fd;
+  transition: border-color 0.2s;
+}
+
+.otp-input:focus {
+  border-color: #7a47f4;
+  outline: none;
+}
