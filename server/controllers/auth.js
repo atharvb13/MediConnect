@@ -1,10 +1,16 @@
 // In-memory OTP store (for demo; use Redis or DB in production)
 const otpStore = {};
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const User = require('../models/user');
 
 // Send OTP to email
 exports.sendOtp = async (req, res) => {
   const { email } = req.body;
   if (!email) return res.json({ success: false, message: 'Email required' });
+  const existing = await User.findOne({ email });
+  if (existing) return res.status(400).json({ message: 'User already exists' });
   const otp = Math.floor(1000 + Math.random() * 9000).toString();
   otpStore[email] = otp;
   try {
@@ -39,19 +45,21 @@ exports.verifyOtp = (req, res) => {
   }
   res.json({ success: false, message: 'Invalid OTP' });
 };
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
-const User = require('../models/user');
+
 
 exports.register = async (req, res) => {
-  const { name, email, password, age, role, location } = req.body;
+  const { name, email, password, age, role, location, zip, qualification, medicalLicenseId, profession, clinicAddress } = req.body;
   try {
-    const existing = await User.findOne({ email });
-    if (existing) return res.status(400).json({ message: 'User already exists' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ name, email, password: hashedPassword, age, role, location });
+    const userData = { name, email, password: hashedPassword, age, role, location, zip };
+    if (role === 'doctor') {
+      userData.qualification = qualification;
+      userData.medicalLicenseId = medicalLicenseId;
+      userData.profession = profession;
+      userData.clinicAddress = clinicAddress;
+    }
+    const user = new User(userData);
     await user.save();
 
     if (role === 'doctor') {
@@ -90,7 +98,9 @@ exports.login = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: 'User not found' });
-
+    if(user.role === 'doctor' && !user.approvedByAdmin) {
+      return res.status(403).json({ message: 'Doctor profile pending approval' });
+    }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 

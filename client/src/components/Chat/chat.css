@@ -1,0 +1,109 @@
+.chat-container {
+  width: 100%;
+  max-width: 480px;
+  margin: 32px auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px 0 rgba(122,71,244,0.10);
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+  height: 70vh;
+}
+
+.chat-header {
+  background: linear-gradient(90deg, #7a47f4 0%, #a084e8 100%);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 18px 24px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  letter-spacing: 0.5px;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 18px 18px 0 18px;
+  overflow-y: auto;
+  background: #f7f4fd;
+  border-bottom: 1px solid #eee;
+}
+
+.chat-message {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  max-width: 70%;
+}
+
+.chat-message-own {
+  align-self: flex-end;
+  background: linear-gradient(90deg, #7a47f4 0%, #a084e8 100%);
+  color: #fff;
+  border-radius: 12px 12px 2px 12px;
+  padding: 10px 16px;
+  box-shadow: 0 2px 8px 0 rgba(122,71,244,0.08);
+}
+
+.chat-message-other {
+  align-self: flex-start;
+  background: #fff;
+  color: #7a47f4;
+  border-radius: 12px 12px 12px 2px;
+  padding: 10px 16px;
+  border: 1.5px solid #e0d7f7;
+}
+
+.chat-message-time {
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 4px;
+  align-self: flex-end;
+}
+
+.chat-input-row {
+  display: flex;
+  padding: 16px;
+  background: #faf8ff;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 12px 14px;
+  border: 1.5px solid #e0d7f7;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #f7f4fd;
+  margin-right: 10px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.chat-input:focus {
+  border-color: #7a47f4;
+}
+
+.chat-send-btn {
+  background: linear-gradient(90deg, #7a47f4 0%, #a084e8 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.chat-send-btn:hover {
+  background: #5c32c7;
+}
+
+.chat-loading, .chat-empty {
+  color: #999;
+  text-align: center;
+  margin-top: 24px;
+}

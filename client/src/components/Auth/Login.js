@@ -17,8 +17,11 @@ const Login = () => {
     setMessage('');
     try {
       const res = await axios.post(`http://localhost:5000/api/auth/login`, { email, password });
-      const { token, user, role } = res.data;
+      const { token, user } = res.data;
       localStorage.setItem('token', token);
+      localStorage.setItem('userId', user._id);
+      localStorage.setItem('userRole', user.role);
+      localStorage.setItem('zip', user.zip);
       setMessage('Login successful! Redirecting...');
       setTimeout(() => {
         if (user.role === 'admin') window.location.href = '/admin';
@@ -36,7 +39,7 @@ const Login = () => {
       <div className="register-left"></div>
       <div className="register-right">
         <div className="register-form">
-          <div className="logo-icon">🔑</div>
+          <div className="logo-icon"><img src="/logo_medi.png" /><img className="logo" src="/medi_icon2.png"/></div>
           <h2>Login to Your Account</h2>
           {message && <div style={{ color: '#2e7d32', marginBottom: 10, fontWeight: 500 }}>{message}</div>}
           {error && <div style={{ color: '#d32f2f', marginBottom: 10, fontWeight: 500 }}>{error}</div>}

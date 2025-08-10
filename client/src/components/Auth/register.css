@@ -1,7 +1,7 @@
 
 .register-container {
   display: flex;
-  height: 100vh;
+  height: 95vh;
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(120deg, #f3e7fa 0%, #e3f0ff 100%);
 }
@@ -42,19 +42,30 @@
   margin: 0 auto;
 }
 
+
 .logo-icon {
-  font-size: 32px;
-  margin-bottom: 20px;
-  color: #7a47f4;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 21px;
 }
 
-.register-form h2 {
-  margin-bottom: 25px;
-  font-size: 24px;
-  font-weight: bold;
-  color: #2c2c2c;
-  letter-spacing: 0.5px;
+.logo-icon img {
+  max-width: 60%;
+  width: 100%;
+  height: auto;
+  display: block;
 }
+
+
+.logo-icon img.logo {
+  max-width: 40px;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 
 .user-type-toggle {
   display: flex;
@@ -164,6 +175,7 @@
   transition: background-color 0.3s ease;
   box-shadow: 0 2px 8px 0 rgba(122,71,244,0.08);
 }
+
 
 .submit-btn:hover {
   background-color: #5c32c7;

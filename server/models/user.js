@@ -11,10 +11,13 @@ const userSchema = new mongoose.Schema({
     state: String,
     country: String
   },
+  zip: String, // For easier doctor search by zip
   isVerified: { type: Boolean, default: false },
   approvedByAdmin: { type: Boolean, default: false },
   qualification: String, 
   medicalLicenseId: String,
+  profession: String,
+  clinicAddress: String,
   googleId: String,
 });
 

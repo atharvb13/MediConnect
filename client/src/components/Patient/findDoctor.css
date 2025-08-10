@@ -1,0 +1,115 @@
+.zip-search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 220px;
+}
+.zip-search-input {
+  padding-right: 80px;
+  width: 100%;
+  border: 1px solid #bdbdbd;
+  border-radius: 6px;
+  font-size: 1rem;
+  padding: 10px 12px;
+}
+.zip-search-btn {
+  position: absolute;
+  right: 0;
+  height: 90%;
+  top: 5%;
+  padding: 0 18px;
+  border-radius: 0 5px 5px 0;
+  border: none;
+  background: #67a4e0;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background 0.2s;
+}
+.zip-search-btn:disabled {
+  background: #bdbdbd;
+  cursor: not-allowed;
+}
+.find-doctor-container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  padding: 32px 32px 24px 32px;
+}
+.find-doctor-search-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.find-doctor-search-bar input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #bdbdbd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+.find-doctor-search-bar button {
+  padding: 10px 20px;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.find-doctor-search-bar button:disabled {
+  background: #bdbdbd;
+  cursor: not-allowed;
+}
+.doctor-list {
+  margin-top: 16px;
+}
+.doctor-card {
+  background: #f7fafd;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(25, 118, 210, 0.08);
+  padding: 18px 20px 14px 20px;
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.doctor-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1976d2;
+}
+.doctor-card-details {
+  font-size: 0.98rem;
+  color: #333;
+  margin-bottom: 6px;
+}
+.doctor-card-actions {
+  display: flex;
+  gap: 10px;
+}
+.doctor-card-actions button {
+  padding: 7px 16px;
+  border: none;
+  border-radius: 5px;
+  background: #43a047;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.doctor-card-actions button:last-child {
+  background: #1976d2;
+}
+.error-message {
+  color: #d32f2f;
+  margin-bottom: 10px;
+  font-weight: 500;
+}

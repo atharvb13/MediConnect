@@ -1,0 +1,117 @@
+.chat-main-layout {
+  display: flex;
+  height: 90vh;
+  background: #f7f4fd;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px 0 rgba(122,71,244,0.10);
+  margin: 32px auto;
+  max-width: 1100px;
+  min-width: 320px;
+}
+
+.chat-sidebar {
+  width: 320px;
+  background: #fff;
+  border-top-left-radius: 18px;
+  border-bottom-left-radius: 18px;
+  box-shadow: 2px 0 16px 0 rgba(122,71,244,0.04);
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-search-bar {
+  padding: 18px 18px 0 18px;
+}
+
+.chat-search-bar input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #e0d7f7;
+  background: #f7f4fd;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.chat-search-bar input:focus {
+  border-color: #7a47f4;
+}
+
+.chat-list {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 18px;
+}
+
+.chat-list-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.chat-list-item.active, .chat-list-item:hover {
+  background: #f3e7fa;
+  border-left: 4px solid #7a47f4;
+}
+
+.chat-list-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e0d7f7;
+  color: #7a47f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.chat-list-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-list-title {
+  font-weight: 600;
+  color: #2c2c2c;
+  font-size: 1.05rem;
+  margin-bottom: 2px;
+}
+
+.chat-list-last {
+  color: #888;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-list-time {
+  color: #aaa;
+  font-size: 0.85rem;
+  margin-left: 8px;
+}
+
+.chat-main-content {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background: #f7f4fd;
+  border-top-right-radius: 18px;
+  border-bottom-right-radius: 18px;
+  min-width: 0;
+}
+
+.chat-placeholder {
+  margin: auto;
+  color: #aaa;
+  font-size: 1.2rem;
+  text-align: center;
+}

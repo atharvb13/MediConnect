@@ -5,8 +5,10 @@ import Register from './components/Auth/Register';
 import DoctorDashboard from './components/Doctor/dashboard';
 import PatientDashboard from './components/Patient/dashboard';
 import AdminDashboard from './components/Admin/Dashboard';
-// import AddDoctor from './components/Admin/AddDoctor';
-// import DoctorList from './components/Admin/DoctorList';
+
+import ChatList from './components/Chat/ChatList';
+import FindDoctor from './components/Patient/FindDoctor';
+import './components/Chat/chatlist.css';
 
 function App() {
   return (
@@ -16,7 +18,9 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/doctor" element={<DoctorDashboard />} />
         <Route path="/dashboard" element={<PatientDashboard />} />
-       <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/patient/chats" element={<ChatList />} />
+        <Route path="/patient/find-doctor" element={<FindDoctor />} />
       </Routes>
 
   );
