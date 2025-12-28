@@ -9,8 +9,8 @@ app = FastAPI()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 model = joblib.load(os.path.join(BASE_DIR, "disease_model.joblib"))
-symptom_cols = joblib.load(os.path.join(BASE_DIR, "symptom_columns.joblib"))
-label_encoder = joblib.load(os.path.join(BASE_DIR, "label_encoder.joblib"))
+cols = joblib.load(os.path.join(BASE_DIR, "symptom_columns.joblib"))
+le = joblib.load(os.path.join(BASE_DIR, "label_encoder.joblib"))
 
 class PredictRequest(BaseModel):
     symptoms: list[str]
