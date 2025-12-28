@@ -1,19 +1,43 @@
 const Chat = require('../models/chat');
-const User = require('../models/user');
 
-// Start a chat between doctor and patient (or return existing)
 exports.startChat = async (req, res) => {
   const { doctorId, patientId } = req.body;
-  if (!doctorId || !patientId) return res.status(400).json({ message: 'doctorId and patientId required' });
   try {
+    // Look for existing chat
     let chat = await Chat.findOne({ participants: { $all: [doctorId, patientId] } });
-    if (!chat) {
-      chat = new Chat({ participants: [doctorId, patientId], messages: [] });
-      await chat.save();
+    
+    if (chat) {
+      // Return existing chat (frontend will check if it's 'accepted' or 'pending')
+      return res.json({ chat, alreadyExists: true });
     }
-    res.json({ chat });
+
+    // Create a new request if it doesn't exist
+    chat = new Chat({ 
+      participants: [doctorId, patientId], 
+      messages: [],
+      status: 'pending',
+      initiatedBy: patientId 
+    });
+    
+    await chat.save();
+
+    res.json({ chat, alreadyExists: false });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// New function to approve chat
+exports.approveChat = async (req, res) => {
+  try {
+    const chat = await Chat.findByIdAndUpdate(
+      req.params.chatId, 
+      { status: 'accepted' }, 
+      { new: true }
+    );
+    res.json({ message: 'Chat accepted', chat });
+  } catch (err) {
+    res.status(500).json({ message: 'Error approving chat' });
   }
 };
 
@@ -49,7 +73,10 @@ exports.getMessages = async (req, res) => {
 exports.getUserChats = async (req, res) => {
   const { userId } = req.params;
   try {
-    const chats = await Chat.find({ participants: userId });
+    const chats = await Chat.find({ participants: userId })
+      .populate('participants', 'name role profession') 
+      .sort({ updatedAt: -1 });
+
     res.json({ chats });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });

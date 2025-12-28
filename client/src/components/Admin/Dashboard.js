@@ -11,17 +11,17 @@ const AdminDashboard = () => {
   }, []);
 
   const fetchPendingDoctors = async () => {
-    const res = await axios.get(`http://localhost:5000/api/admin/pending-doctors`);
+    const res = await axios.get(`http://localhost:5001/api/admin/pending-doctors`);
     setPendingDoctors(res.data);
   };
 
   const fetchAllDoctors = async () => {
-    const res = await axios.get(`http://localhost:5000/api/admin/all-doctors`);
+    const res = await axios.get(`http://localhost:5001/api/admin/all-doctors`);
     setAllDoctors(res.data);
   };
 
   const approveDoctor = async (doctorId,email) => {
-    await axios.post('http://localhost:5000/api/admin/approve-doctor', { doctorId, email });
+    await axios.post('http://localhost:5001/api/admin/approve-doctor', { doctorId, email });
     fetchPendingDoctors();
     fetchAllDoctors();
   };

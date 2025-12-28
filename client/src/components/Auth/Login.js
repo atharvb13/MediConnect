@@ -16,7 +16,7 @@ const Login = () => {
     setError('');
     setMessage('');
     try {
-      const res = await axios.post(`http://localhost:5000/api/auth/login`, { email, password });
+      const res = await axios.post(`http://localhost:5001/api/auth/login`, { email, password });
       const { token, user } = res.data;
       localStorage.setItem('token', token);
       localStorage.setItem('userId', user._id);
@@ -25,8 +25,7 @@ const Login = () => {
       setMessage('Login successful! Redirecting...');
       setTimeout(() => {
         if (user.role === 'admin') window.location.href = '/admin';
-        else if (user.role === 'doctor') window.location.href = '/doctor';
-        else window.location.href = '/dashboard';
+        else window.location.href = '/chats';
       }, 1200);
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
@@ -66,7 +65,7 @@ const Login = () => {
           </div>
           <button
             className="google-btn"
-            onClick={() => window.location.href = 'http://localhost:5000/api/auth/google'}
+            onClick={() => window.location.href = 'http://localhost:5001/api/auth/google'}
             disabled={loading}
           >
             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google" className="google-icon" /> Sign In with Google

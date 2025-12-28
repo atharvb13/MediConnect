@@ -4,7 +4,7 @@ const chatController = require('../controllers/chat');
 
 // Start a chat or get existing chat between doctor and patient
 router.post('/start', chatController.startChat);
-
+router.put('/approve/:chatId', chatController.approveChat);
 // Send a message in a chat
 router.post('/:chatId/message', chatController.sendMessage);
 

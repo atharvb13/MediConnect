@@ -53,7 +53,7 @@ const Register = () => {
     setError('');
     setMessage('');
     try {
-      const res = await axios.post(`http://localhost:5000/api/auth/send-otp`, { email });
+      const res = await axios.post(`http://localhost:5001/api/auth/send-otp`, { email });
       if (res.data.success) {
         setOtpSent(true);
         setMessage('OTP sent to your email');
@@ -76,7 +76,7 @@ const Register = () => {
     setError('');
     setMessage('');
     try {
-      const res = await axios.post(`http://localhost:5000/api/auth/verify-otp`, {
+      const res = await axios.post(`http://localhost:5001/api/auth/verify-otp`, {
         email,
         otp: enteredOtp
       });
@@ -126,7 +126,7 @@ const Register = () => {
         payload.profession = profession;
         payload.clinicAddress = clinicAddress;
       }
-      const res = await axios.post(`http://localhost:5000/api/auth/register`, payload);
+      const res = await axios.post(`http://localhost:5001/api/auth/register`, payload);
       if (res.status==200) {
         if(userType === 'patient') {
           alert('Registration successful!');
@@ -145,7 +145,7 @@ const Register = () => {
 
 
   const handleGoogleRegister = () => {
-    window.location.href = `http://localhost:5000/api/auth/google`;
+    window.location.href = `http://localhost:5001/api/auth/google`;
   };
 
   const handleOtpInput = (e, i) => {

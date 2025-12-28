@@ -8,7 +8,7 @@ import AdminDashboard from './components/Admin/Dashboard';
 
 import ChatList from './components/Chat/ChatList';
 import FindDoctor from './components/Patient/FindDoctor';
-import './components/Chat/chatlist.css';
+import ML_predict from './components/Patient/ML_predict';
 
 function App() {
   return (
@@ -19,7 +19,8 @@ function App() {
         <Route path="/doctor" element={<DoctorDashboard />} />
         <Route path="/dashboard" element={<PatientDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/patient/chats" element={<ChatList />} />
+        <Route path="/chats" element={<ChatList />} />
+        <Route path="/patient/diagnosis" element={<ML_predict />} />
         <Route path="/patient/find-doctor" element={<FindDoctor />} />
       </Routes>
 

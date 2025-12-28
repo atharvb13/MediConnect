@@ -1,23 +1,48 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './chat.css';
+import io from 'socket.io-client';
+const socket = io.connect("http://localhost:5001");
 
-const Chat = ({ chatId, userId, otherUserName }) => {
+
+const Chat = ({ status, chatId, userId, otherUserName }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    if (chatId) fetchMessages();
-    // Optionally, add polling or websockets for real-time
-    // eslint-disable-next-line
-  }, [chatId]);
+  if (chatId) {
+    socket.emit('join_chat', chatId);
+    fetchMessages();
+  }
+  socket.on('receive_message', (msg) => {
+    setMessages((prev) => [...prev, msg]);
+    scrollToBottom();
+  });
+  return () => socket.off('receive_message');
+}, [chatId]);
+
+const sendMessage = async () => {
+  if (!input.trim() || status !== 'accepted') return;
+  
+  const msgData = { chatId, senderId: userId, content: input, timestamp: new Date() };
+  socket.emit('send_message', msgData); // Real-time emit
+  
+  try {
+      await axios.post(`http://localhost:5001/api/chat/${chatId}/message`, {
+        senderId: userId,
+        content: input
+      });
+      setInput('');
+      fetchMessages();
+    } catch (err) {}
+};
 
   const fetchMessages = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:5000/api/chat/${chatId}/messages`);
+      const res = await axios.get(`http://localhost:5001/api/chat/${chatId}/messages`);
       setMessages(res.data.messages);
     } catch (err) {
       setMessages([]);
@@ -26,17 +51,6 @@ const Chat = ({ chatId, userId, otherUserName }) => {
     scrollToBottom();
   };
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
-    try {
-      await axios.post(`http://localhost:5000/api/chat/${chatId}/message`, {
-        senderId: userId,
-        content: input
-      });
-      setInput('');
-      fetchMessages();
-    } catch (err) {}
-  };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') sendMessage();
