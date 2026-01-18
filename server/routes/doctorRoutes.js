@@ -1,8 +1,10 @@
 const express = require('express');
-const { sendMessage, getChat } = require('../controllers/doctor');
+const  doctorController= require('../controllers/doctor');
 const router = express.Router();
+const { protect } = require('../middleware/auth');
 
-router.post('/send-message', sendMessage);
-router.get('/get-chat', getChat);
+router.get('/profile/me', protect, doctorController.getDoctorProfile);
+router.put('/profile/me', protect, doctorController.updateDoctorProfile);
+
 
 module.exports = router;

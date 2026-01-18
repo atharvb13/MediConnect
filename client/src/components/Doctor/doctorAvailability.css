@@ -1,0 +1,237 @@
+:root {
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --bg-main: #f8fafc;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --white: #ffffff;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.profile-main-content {
+  background-color: var(--bg-main);
+  padding: 40px;
+  min-height: 100vh;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 24px;
+}
+
+/* Appointment Cards Styling */
+.modern-app-card {
+  background: var(--white);
+  padding: 16px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s;
+}
+
+.modern-app-card:hover {
+  transform: translateY(-2px);
+}
+
+.app-date-badge {
+  background: #ede9fe;
+  color: var(--primary);
+  padding: 10px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+}
+
+.app-day { font-weight: 800; font-size: 1.2rem; }
+.app-month { font-size: 0.75rem; text-transform: uppercase; font-weight: 600; }
+
+.app-info h4 { margin: 0; color: var(--text-main); font-size: 1rem; }
+.app-info p { margin: 4px 0 0; color: var(--text-muted); font-size: 0.85rem; display: flex; align-items: center; gap: 5px; }
+
+/* Availability Card */
+.availability-card {
+  background: var(--white);
+  padding: 30px;
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+
+.calendar-styled-wrapper {
+  margin-bottom: 24px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Manual Input Section */
+.manual-time-input {
+  margin-bottom: 20px;
+}
+
+.manual-time-input label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.time-input-field {
+  flex: 1;
+  padding: 10px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  outline: none;
+}
+
+.add-slot-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Chip Styling */
+.slots-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  min-height: 40px;
+}
+
+.time-chip {
+  background: #f1f5f9;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.remove-chip-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  display: flex;
+  padding: 0;
+}
+
+.save-btn-primary {
+  width: 100%;
+  margin-top: 24px;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.save-btn-primary:disabled {
+  background: #cbd5e1;
+}
+
+/* React Calendar Overrides */
+.react-calendar {
+  width: 100% !important;
+  border: none !important;
+  font-family: inherit !important;
+}
+
+.react-calendar__tile--active {
+  background: var(--primary) !important;
+  border-radius: 8px;
+}
+
+
+/* ...existing code... */
+
+.slots-selection-section {
+  margin-bottom: 18px;
+  background: #f6f8fa;
+  border-radius: 12px;
+  padding: 18px 18px 10px 18px;
+  box-shadow: 0 2px 8px #ede9fe33;
+}
+
+.default-times-options {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.default-times-options label {
+  font-weight: 600;
+  font-size: 0.93rem;
+  color: var(--text-main);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.default-times-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.default-time-btn {
+  background: #ede9fe;
+  color: var(--primary);
+  border: none;
+  border-radius: 8px;
+  padding: 7px 16px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.default-time-btn.selected,
+.default-time-btn:disabled {
+  background: #c7d2fe;
+  color: #a084e8;
+  cursor: not-allowed;
+}
+
+.time-chip.existing {
+  background: #e0e7ff;
+  color: #6366f1;
+  border: 1.5px solid #a5b4fc;
+  font-weight: 700;
+}
+
+.existing-slots-note {
+  margin-top: 6px;
+}

@@ -3,11 +3,9 @@ const Chat = require('../models/chat');
 exports.startChat = async (req, res) => {
   const { doctorId, patientId } = req.body;
   try {
-    // Look for existing chat
     let chat = await Chat.findOne({ participants: { $all: [doctorId, patientId] } });
     
     if (chat) {
-      // Return existing chat (frontend will check if it's 'accepted' or 'pending')
       return res.json({ chat, alreadyExists: true });
     }
 

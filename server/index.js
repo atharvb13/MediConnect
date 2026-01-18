@@ -6,6 +6,9 @@ const authRoutes = require('./routes/authRoutes');
 const doctorRoutes = require('./routes/doctorRoutes');
 const patientRoutes = require('./routes/patientRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const chatRoutes = require('./routes/chatRoutes');
+const apptRoutes = require('./routes/apptRoutes');
+
 const http = require('http');
 const { Server } = require('socket.io');
 
@@ -34,10 +37,10 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/doctor', doctorRoutes);
-const chatRoutes = require('./routes/chatRoutes');
 app.use('/api/patient', patientRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/appointments', apptRoutes);
 
 const PORT = process.env.PORT || 5001;
 io.on('connection', (socket) => {

@@ -28,6 +28,15 @@ const FindDoctor = () => {
     setLoading(false);
   };
 
+  const handleBookAppointment = (doctor) => {
+  navigate('/patient/book-appointment', { 
+    state: { 
+      doctorId: doctor._id, 
+      doctorName: doctor.name 
+    } 
+  });
+};
+
   // Logic: Check for existing chat or send request
   const handleChat = async (doctorId) => {
     try {
@@ -36,27 +45,24 @@ const FindDoctor = () => {
         patientId
       });
 
-      const chat = res.data.chat;
+      const { chat, alreadyExists } = res.data;
 
       // 1. If chat already accepted, go to messages
       if (chat.status === 'accepted') {
-        navigate('/patient/chats');
+        navigate('/chats');
         return;
       }
 
       // 2. If chat is pending, notify user
-      if (chat.status === 'pending') {
+      if (alreadyExists && chat.status === 'pending') {
         alert("You already have a pending request with this doctor.");
-        navigate('/patient/chats');
         return;
       }
 
-      // 3. (Optional) Confirmation logic if startChat didn't auto-create
       const confirmSend = window.confirm("Would you like to send a chat request to this doctor?");
       if (confirmSend) {
-        // Logic to update/re-send if necessary
         alert("Request sent successfully!");
-        navigate('/patient/chats');
+        navigate('/chats');
       }
     } catch (err) {
       alert("Error initiating chat.");
@@ -91,11 +97,23 @@ const FindDoctor = () => {
             <div className="advanced-filters">
               <select value={profession} onChange={e => setProfession(e.target.value)}>
                 <option value="">All Specializations</option>
-                <option value="Cardiologist">Cardiologist</option>
-                <option value="Dermatologist">Dermatologist</option>
-                <option value="Neurologist">Neurologist</option>
-                <option value="Pediatrician">Pediatrician</option>
-                <option value="Psychiatrist">Psychiatrist</option>
+                 <option value="General Physician">General Physician</option>
+                    <option value="Cardiologist">Cardiologist</option>
+                    <option value="Dermatologist">Dermatologist</option>
+                    <option value="Dentist">Dentist</option>
+                    <option value="ENT Specialist">ENT Specialist</option>
+                    <option value="Gynecologist">Gynecologist</option>
+                    <option value="Neurologist">Neurologist</option>
+                    <option value="Oncologist">Oncologist</option>
+                    <option value="Ophthalmologist">Ophthalmologist</option>
+                    <option value="Orthopedic">Orthopedic</option>
+                    <option value="Pathologist">Pathologist</option>
+                    <option value="Pediatrician">Pediatrician</option>
+                    <option value="Psychiatrist">Psychiatrist</option>
+                    <option value="Pulmonologist">Pulmonologist</option>
+                    <option value="Radiologist">Radiologist</option>
+                    <option value="Urologist">Urologist</option>
+                    <option value="Other">Other</option>
               </select>
               <input
                 type="text"
@@ -129,7 +147,12 @@ const FindDoctor = () => {
 
                 <div className="card-footer">
                   <button className="btn-chat" onClick={() => handleChat(doc._id)}>Chat</button>
-                  <button className="btn-book">Book Appointment</button>
+                  <button 
+                  className="btn-book" 
+                  onClick={() => handleBookAppointment(doc)} // Pass the whole doc object
+                >
+                  Book Appointment
+                </button>
                 </div>
               </div>
             ))}

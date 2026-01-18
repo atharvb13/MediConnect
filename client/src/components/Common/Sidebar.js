@@ -9,7 +9,7 @@ const Sidebar = ({ role }) => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userRole');
-    navigate('/login');
+    navigate('/');
   };
 
   // Helper function to check if a link is active

@@ -19,7 +19,7 @@ const chatSchema = new mongoose.Schema({
   status: { 
     type: String, 
     enum: ['pending', 'accepted', 'rejected'], 
-    default: 'pending' 
+    default: '' 
   },
   initiatedBy: { 
     type: mongoose.Schema.Types.ObjectId, 
@@ -31,7 +31,20 @@ const chatSchema = new mongoose.Schema({
   timestamps: true // Adds createdAt and updatedAt
 });
 
-// Indexing for faster lookups and to prevent duplicate chats
+// Find chats involving a user
 chatSchema.index({ participants: 1 });
+
+// Faster chat list sorting
+chatSchema.index({ updatedAt: -1 });
+
+// Prevent duplicate 1-to-1 chats (IMPORTANT)
+chatSchema.index(
+  { participants: 1 },
+  { unique: true }
+);
+
+// Filter by status (pending/accepted)
+chatSchema.index({ status: 1 });
+
 
 module.exports = mongoose.model('Chat', chatSchema);

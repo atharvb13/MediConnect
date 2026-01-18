@@ -1,28 +1,50 @@
-const Chat = require('../models/chat');
+const User = require('../models/user');
 
-exports.sendMessage = async (req, res) => {
-  const { chatId, senderId, content } = req.body;
+
+exports.getDoctorProfile = async (req, res) => {
   try {
-    const chat = await Chat.findById(chatId);
-    if (!chat) return res.status(404).json({ message: 'Chat not found' });
-    chat.messages.push({ senderId, content });
-    await chat.save();
-    res.status(200).json(chat);
-  } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    const doctor = await User.findById(req.user.id).select('-password');
+
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    res.status(200).json(doctor);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error fetching profile' });
   }
 };
 
-exports.getChat = async (req, res) => {
-  const { userId1, userId2 } = req.query;
+exports.updateDoctorProfile = async (req, res) => {
   try {
-    let chat = await Chat.findOne({ participants: { $all: [userId1, userId2] } });
-    if (!chat) {
-      chat = new Chat({ participants: [userId1, userId2], messages: [] });
-      await chat.save();
+    // req.user.id comes from the 'protect' middleware
+    const doctor = await User.findById(req.user.id);
+
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
     }
-    res.status(200).json(chat);
-  } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+
+    // Update fields (add more fields as necessary based on your Schema)
+    // Using explicit assignment is safer than spreading req.body blindly
+    doctor.name = req.body.name || doctor.name;
+    doctor.bloodGroup = req.body.bloodGroup || doctor.bloodGroup;
+    doctor.dob = req.body.dob || doctor.dob;
+    doctor.gender = req.body.gender || doctor.gender;
+    doctor.location = req.body.location || doctor.location;
+    doctor.zip = req.body.zip || doctor.zip;
+    
+
+    // If you need to handle complex objects like address or medical history, do it here
+
+    const updatedDoctor = await doctor.save();
+
+    res.status(200).json({
+      success: true,
+      data: updatedDoctor
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error updating profile' });
   }
 };
