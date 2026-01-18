@@ -48,45 +48,46 @@ exports.verifyOtp = (req, res) => {
 
 
 exports.register = async (req, res) => {
-  const { name, email, password, age, role, location, zip, qualification, medicalLicenseId, profession, clinicAddress } = req.body;
+  const {
+    name, email, password, age, role, location, zip,
+    qualification, medicalLicenseId, profession, clinicAddress,
+    googleId
+  } = req.body;
+
   try {
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const userData = { name, email, password: hashedPassword, age, role, location, zip };
-    if (role === 'doctor') {
-      userData.qualification = qualification;
-      userData.medicalLicenseId = medicalLicenseId;
-      userData.profession = profession;
-      userData.clinicAddress = clinicAddress;
-    }
-    const user = new User(userData);
-    await user.save();
-
-    if (role === 'doctor') {
-      // Send notification to doctor
-      const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-          user: process.env.GMAIL_USER,
-          pass: process.env.GMAIL_PASS,
-        },
-      });
-
-      transporter.sendMail({
-        to: user.email,
-        subject: 'Doctor Approval Notification',
-        text: 'You have successfully registered. Your profile is pending admin approval.',
-      });
-
-      return res.status(200).json({ message: 'Registered. Awaiting admin approval.' });
+    const exists = await User.findOne({ email });
+    if (exists) {
+      return res.status(400).json({ message: 'User already exists' });
     }
 
-    const token = jwt.sign({ id: user._id }, 'secret');
-    res.status(200).json({ token });
+    const userData = {
+      name,
+      email,
+      age,
+      role,
+      location,
+      zip,
+      googleId,
+      isVerified: true
+    };
+
+    if (password) {
+      userData.password = await bcrypt.hash(password, 10);
+    }
+
+    if (role === 'doctor') {
+      Object.assign(userData, {
+        qualification,
+        medicalLicenseId,
+        profession,
+        clinicAddress
+      });
+    }
+
+    const user = await User.create(userData);
+
+    return res.status(200).json({ success: true });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -95,18 +96,39 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: 'User not found' });
-    if(user.role === 'doctor' && !user.approvedByAdmin) {
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Doctor approval check
+    if (user.role === 'doctor' && !user.approvedByAdmin) {
       return res.status(403).json({ message: 'Doctor profile pending approval' });
     }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET);
-    res.status(200).json({ user, token, role: user.role });
+    // 🔐 Google-only user
+    if (user.googleId && !user.password) {
+      return res.status(400).json({
+        message: 'Please sign in using Google'
+      });
+    }
+
+    // 🔐 Email/password user
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET
+    );
+
+    res.status(200).json({ user, token });
   } catch (err) {
-    res.status(500).json({ message: err.message || 'Server error' });
+    res.status(500).json({ message: 'Server error' });
   }
 };
+

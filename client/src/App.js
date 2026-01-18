@@ -11,6 +11,7 @@ import FindDoctor from './components/Patient/FindDoctor';
 import ML_predict from './components/Patient/ML_predict';
 import AppointmentPage from './components/Patient/AppointmentPage';
 import PatientProfile from './components/Patient/PatientProfile';
+import OAuthSuccess from './components/Auth/oauth';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/oauth-success" element={<OAuthSuccess />} />
         <Route path="/doctor/appointments" element={<DoctorAvailability />} />
         <Route path="/doctor/profile" element={<DoctorProfile />} />
         <Route path="/admin" element={<AdminDashboard />} />

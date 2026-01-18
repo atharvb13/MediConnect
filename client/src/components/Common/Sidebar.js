@@ -7,8 +7,7 @@ const Sidebar = ({ role }) => {
   const location = useLocation(); // To detect active tab
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userRole');
+    localStorage.clear();
     navigate('/');
   };
 

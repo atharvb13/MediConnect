@@ -1,8 +1,6 @@
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import './register.css';
-
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,62 +13,111 @@ const Login = () => {
     setLoading(true);
     setError('');
     setMessage('');
+
     try {
-      const res = await axios.post(`http://localhost:5001/api/auth/login`, { email, password });
+      const res = await axios.post(
+        'http://localhost:5001/api/auth/login',
+        { email, password }
+      );
+
       const { token, user } = res.data;
+
       localStorage.setItem('token', token);
       localStorage.setItem('userId', user._id);
       localStorage.setItem('userRole', user.role);
       localStorage.setItem('zip', user.zip);
+
       setMessage('Login successful! Redirecting...');
+
       setTimeout(() => {
-        if (user.role === 'admin') window.location.href = '/admin';
-        else window.location.href = '/chats';
+        if (user.role === 'admin') {
+          window.location.href = '/admin';
+        } else {
+          window.location.href = '/chats';
+        }
       }, 1200);
+
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      const msg = err.response?.data?.message || 'Login failed';
+      setError(msg);
     }
+
     setLoading(false);
   };
 
   return (
     <div className="register-container">
       <div className="register-left"></div>
+
       <div className="register-right">
         <div className="register-form">
-          <div className="logo-icon"><img src="/logo_medi.png" /><img className="logo" src="/medi_icon2.png"/></div>
+
+          <div className="logo-icon">
+            <img src="/logo_medi.png" />
+            <img className="logo" src="/medi_icon2.png" />
+          </div>
+
           <h2>Login to Your Account</h2>
-          {message && <div style={{ color: '#2e7d32', marginBottom: 10, fontWeight: 500 }}>{message}</div>}
-          {error && <div style={{ color: '#d32f2f', marginBottom: 10, fontWeight: 500 }}>{error}</div>}
+
+          {message && (
+            <div style={{ color: '#2e7d32', marginBottom: 10, fontWeight: 500 }}>
+              {message}
+            </div>
+          )}
+
+          {error && (
+            <div style={{ color: '#d32f2f', marginBottom: 10, fontWeight: 500 }}>
+              {error}
+            </div>
+          )}
+
           <input
             type="email"
             placeholder="Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
             disabled={loading}
             autoFocus
           />
+
           <input
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
             disabled={loading}
           />
-          <button className="submit-btn" onClick={handleLogin} disabled={loading || !email || !password}>
+
+          <button
+            className="submit-btn"
+            onClick={handleLogin}
+            disabled={loading || !email || !password}
+          >
             {loading ? 'Logging in...' : 'Login'}
           </button>
+
           <div className="divider">
             <hr /><span>OR</span><hr />
           </div>
+
           <button
             className="google-btn"
-            onClick={() => window.location.href = 'http://localhost:5001/api/auth/google'}
-            disabled={loading}
+            onClick={() =>
+              window.location.href = 'http://localhost:5001/api/auth/google'
+            }
           >
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google" className="google-icon" /> Sign In with Google
+            <img
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg"
+              alt="Google"
+              className="google-icon"
+            />
+            Sign in with Google
           </button>
-          <p className="login-link">Don't have an account? <a href="/register">Register</a></p>
+
+          <p className="login-link">
+            Don't have an account? <a href="/register">Register</a>
+          </p>
+
         </div>
       </div>
     </div>

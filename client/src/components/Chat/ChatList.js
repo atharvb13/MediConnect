@@ -28,8 +28,9 @@ const ChatList = () => {
 
   // 1. Initial Load & Auth Check
   useEffect(() => {
-    if (!userId) {
-      navigate('/login');
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/');
     } else {
       fetchChats();
     }
