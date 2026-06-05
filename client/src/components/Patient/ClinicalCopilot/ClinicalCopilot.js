@@ -16,44 +16,33 @@ const ANALYSIS_STEPS = [
 export default function ClinicalCopilot({ role = "patient" }) {
   const [step, setStep] = useState("upload");
   const [patientId, setPatientId] = useState("PATIENT-001");
-  const [normalizedText, setNormalizedText] = useState("");
   const [filenames, setFilenames] = useState([]);
-  const [showPreview, setShowPreview] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
 
-  const handleFileReady = useCallback((text, names) => {
-    setNormalizedText(text);
-    setFilenames(names);
-    setStep("preview");
-    setError("");
-    setShowPreview(false);
-    setIsEditing(false);
-  }, []);
+  const handleFileReady = useCallback(async (text, names) => {
+    if (!text.trim()) return;
 
-  const handleAnalyze = useCallback(async () => {
-    if (!normalizedText.trim()) return;
+    setFilenames(names);
     setStep("analyzing");
     setError("");
+    setResult(null);
+
     try {
-      const data = await analyzeChart(normalizedText, patientId, role);
+      const data = await analyzeChart(text, patientId, role);
       setResult(data);
       setStep("results");
     } catch (e) {
       setError(e.message);
-      setStep("preview");
+      setStep("upload");
     }
-  }, [normalizedText, patientId, role]);
+  }, [patientId, role]);
 
   const handleReset = useCallback(() => {
     setStep("upload");
-    setNormalizedText("");
     setFilenames([]);
     setResult(null);
     setError("");
-    setShowPreview(false);
-    setIsEditing(false);
   }, []);
 
   return (
@@ -83,9 +72,10 @@ export default function ClinicalCopilot({ role = "patient" }) {
             This tool is for informational purposes only and does not replace professional medical advice.
           </div>
 
-          {(step === "upload" || step === "preview") && (
+          {step === "upload" && (
             <div className="cc-card">
               <h2 className="cc-sectionTitle">Upload Clinical Document</h2>
+              {error && <p className="cc-errorText" style={{ marginBottom: 12 }}>{error}</p>}
               <FileUpload
                 patientId={patientId}
                 onPatientIdChange={setPatientId}
@@ -95,68 +85,15 @@ export default function ClinicalCopilot({ role = "patient" }) {
             </div>
           )}
 
-          {step === "preview" && normalizedText && (
-            <div className="cc-card cc-previewCard">
-              <div className="cc-previewHeader">
-                <div>
-                  <h2 className="cc-sectionTitle">Structured Clinical Text</h2>
-                  <p className="cc-muted">
-                    Normalized from {filenames.join(", ")} by InputAgent — review before analysis
-                  </p>
-                </div>
-                <div className="cc-previewActions">
-                  <button
-                    type="button"
-                    className="cc-btn"
-                    onClick={() => setIsEditing((v) => !v)}
-                  >
-                    {isEditing ? "Done editing" : "Edit"}
-                  </button>
-                  <button
-                    type="button"
-                    className="cc-btn"
-                    onClick={() => setShowPreview((v) => !v)}
-                  >
-                    {showPreview ? "Hide" : "Preview"}
-                  </button>
-                </div>
-              </div>
-
-              {showPreview && (
-                <div className="cc-previewBody">
-                  {isEditing ? (
-                    <textarea
-                      className="cc-textarea"
-                      value={normalizedText}
-                      onChange={(e) => setNormalizedText(e.target.value)}
-                      rows={16}
-                    />
-                  ) : (
-                    <pre className="cc-previewText">{normalizedText}</pre>
-                  )}
-                </div>
-              )}
-
-              <div className="cc-previewFooter">
-                {error && <p className="cc-errorText">{error}</p>}
-                <button
-                  type="button"
-                  className="cc-btnPrimary"
-                  onClick={handleAnalyze}
-                >
-                  Run Full Analysis
-                </button>
-              </div>
-            </div>
-          )}
-
           {step === "analyzing" && (
             <div className="cc-card cc-loadingCard">
               <div className="cc-spinner" />
               <div className="cc-loadingText">
                 <p className="cc-loadingTitle">Running 5 parallel agents</p>
                 <p className="cc-muted">
-                  Ingestion · Medication · Timeline · Risk · Synthesis
+                  {filenames.length > 0
+                    ? `Analyzing ${filenames.join(", ")}`
+                    : "Ingestion · Medication · Timeline · Risk · Synthesis"}
                 </p>
               </div>
               <div className="cc-loadingSteps">

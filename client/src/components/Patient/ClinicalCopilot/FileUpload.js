@@ -82,7 +82,7 @@ export default function FileUpload({ patientId, onPatientIdChange, onReady, role
         .join("\n\n---\n\n");
 
       const result = await normalizeText(combined, patientId, role);
-      onReady(result.normalized_text, readyFiles.map((f) => f.file.name));
+      await onReady(result.normalized_text, readyFiles.map((f) => f.file.name));
     } catch (e) {
       setNormalizeError(e.message);
     } finally {
@@ -203,7 +203,7 @@ export default function FileUpload({ patientId, onPatientIdChange, onReady, role
               onClick={handleSend}
               disabled={!canSend}
             >
-              {normalizing ? "Normalizing..." : "Send to InputAgent →"}
+              {normalizing ? "Normalizing & analyzing..." : "Send to InputAgent & Analyze →"}
             </button>
           </div>
         </div>
