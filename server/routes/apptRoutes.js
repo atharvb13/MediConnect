@@ -10,11 +10,7 @@ router.get('/doctor/slots/:doctorId', appointmentsController.getAvailableSlots);
 
 // Book an appointment (patient)
 router.post('/book', appointmentsController.bookAppointment);
-
-// (Optional) Get all appointments for a patient
-router.get('/patient/:patientId', appointmentsController.getPatientAppointments);
-
-// (Optional) Get all appointments for a doctor
-router.get('/doctor/:doctorId', appointmentsController.getDoctorAppointments);
+router.get('/getPatientApp/:patientId', appointmentsController.getUpcomingPatient);
+router.get('/getDoctorApp/:doctorId', appointmentsController.getUpcomingDoctorAppointments);
 
 module.exports = router;

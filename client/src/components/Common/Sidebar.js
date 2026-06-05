@@ -44,6 +44,13 @@ const Sidebar = ({ role }) => {
                 <span className="menu-text">Appointments</span>
               </li>
               <li 
+                className={isActive('/doctor/copilot') ? 'active' : ''} 
+                onClick={() => navigate('/doctor/copilot')}
+              >
+                <span className="sidebar-icon">🩺</span> 
+                <span className="menu-text">Clinical Copilot</span>
+              </li>
+              <li 
                 className={isActive('/chats') ? 'active' : ''} 
                 onClick={() => navigate('/chats')}
               >
@@ -67,7 +74,7 @@ const Sidebar = ({ role }) => {
                 onClick={() => navigate('/patient/diagnosis')}
               >
                 <span className="sidebar-icon">🩺</span> 
-                <span className="menu-text">ML Diagnosis</span>
+                <span className="menu-text">Clinical Copilot</span>
               </li>
               <li 
                 className={isActive('/patient/find-doctor') ? 'active' : ''} 

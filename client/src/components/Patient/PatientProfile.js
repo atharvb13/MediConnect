@@ -51,7 +51,7 @@ const PatientProfile = () => {
     setAppLoading(true);
     try {
       // Adjusted to use the patientId from localStorage
-      const res = await axios.get(`http://localhost:5001/api/appointments/patient/${patientId}`);
+      const res = await axios.get(`http://localhost:5001/api/appointments/getPatientApp/${patientId}`);
       setAppointments(res.data);
     } catch (err) {
       console.error("Failed to fetch appointments:", err);

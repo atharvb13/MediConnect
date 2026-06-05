@@ -27,7 +27,7 @@ const DoctorAvailability = ({ userId }) => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const res = await axios.get(`http://localhost:5001/api/appointments/doctor/${doctorId}`);
+        const res = await axios.get(`http://localhost:5001/api/appointments/getDoctorApp/${doctorId}`);
         // API now returns: [{ slot, patientName, patientEmail, status }]
         const formatted = res.data.map(app => ({
           slot: app.slot,
@@ -169,7 +169,7 @@ const DoctorAvailability = ({ userId }) => {
                 <div key={idx} className="modern-app-card">
                   <div className="app-date-badge">
                     <span className="app-day">{new Date(app.slot).getDate()}</span>
-                    <span className="app-month">{new Date(app.slot).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    <span className="app-month">{new Date(app.slot).toLocaleString('default', { month: 'short' })}</span>
                   </div>
                   <div className="app-info">
                     <h4>{app.patientName}</h4>

@@ -8,7 +8,7 @@ import DoctorProfile from './components/Doctor/doctorProfile';
 
 import ChatList from './components/Chat/ChatList';
 import FindDoctor from './components/Patient/FindDoctor';
-import ML_predict from './components/Patient/ML_predict';
+import ClinicalCopilot from './components/Patient/ClinicalCopilot/ClinicalCopilot';
 import AppointmentPage from './components/Patient/AppointmentPage';
 import PatientProfile from './components/Patient/PatientProfile';
 import OAuthSuccess from './components/Auth/oauth';
@@ -24,7 +24,8 @@ function App() {
         <Route path="/doctor/profile" element={<DoctorProfile />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/chats" element={<ChatList />} />
-        <Route path="/patient/diagnosis" element={<ML_predict />} />
+        <Route path="/patient/diagnosis" element={<ClinicalCopilot role="patient" />} />
+        <Route path="/doctor/copilot" element={<ClinicalCopilot role="doctor" />} />
         <Route path="/patient/profile" element={<PatientProfile />} />
         <Route path="/patient/find-doctor" element={<FindDoctor />} />
         <Route path="/patient/book-appointment" element={<AppointmentPage />} />

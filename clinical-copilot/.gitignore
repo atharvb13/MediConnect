@@ -1,0 +1,36 @@
+# Environment
+.env
+.env.local
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+*.venv
+
+# UI — build artifacts and deps
+ui/node_modules/
+ui/dist/
+ui/.vite/
+ui/tsconfig.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist/
+build/
+
+# Local synthetic upload fixtures
+clinical_test_docs/
+
+# Graphify runtime files
+graphify-out/manifest.json
+graphify-out/cost.json
+
+# Claude Code
+.claude/

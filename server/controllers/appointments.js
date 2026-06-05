@@ -25,16 +25,13 @@ exports.bookAppointment = async (req, res) => {
     );
     if (!slot) return res.status(400).json({ message: "Slot taken" });
 
-    const appt = new Appointment({ doctorId, patientId, slotId });
+    const appt = new Appointment({ doctorId, patientId, slotId, slotTime: slot.slot });
     await appt.save();
     res.json(appt);
   } catch (err) { res.status(500).send(err); }
 };
 
-// Get all appointments for a patient
-// ...existing code...
 
-// Get all appointments for a patient
 exports.getPatientAppointments = async (req, res) => {
   const { patientId } = req.params;
   try {
@@ -57,6 +54,40 @@ exports.getDoctorAppointments = async (req, res) => {
   const { doctorId } = req.params;
   try {
     const appts = await Appointment.find({ doctorId })
+      .populate('patientId', 'name email')
+      .populate('slotId');
+    // Only send required fields
+    const result = appts.map(app => ({
+      slot: app.slotId?.slot,
+      patientName: app.patientId?.name,
+      patientEmail: app.patientId?.email,
+      status: app.status
+    }));
+    res.json(result);
+  } catch (err) { res.status(500).send(err); }
+};
+
+exports.getUpcomingPatient = async (req, res) => {
+  const { patientId } = req.params;
+  try {
+    const appts = await Appointment.find({ patientId, slotTime: { $gte: new Date() } })
+      .populate('doctorId', 'name profession')
+      .populate('slotId');
+    // Only send required fields
+    const result = appts.map(app => ({
+      slot: app.slotId?.slot,
+      doctorName: app.doctorId?.name,
+      doctorProfession: app.doctorId?.profession,
+      status: app.status
+    }));
+    res.json(result);
+  } catch (err) { res.status(500).send(err); }
+};
+
+exports.getUpcomingDoctorAppointments = async (req, res) => {
+  const { doctorId } = req.params;
+  try {
+    const appts = await Appointment.find({ doctorId, slotTime: { $gte: new Date() } })
       .populate('patientId', 'name email')
       .populate('slotId');
     // Only send required fields
