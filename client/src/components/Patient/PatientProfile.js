@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import axios from 'axios';
-import Sidebar from '../Common/Sidebar';
-import { FiCalendar, FiClock, FiUser, FiMapPin } from 'react-icons/fi'; // Suggested icons
+import PageLayout from '../Common/PageLayout';
+import LoadingState from '../Common/LoadingState';
+import Alert from '../Common/Alert';
+import { useToast } from '../Common/ToastContext';
+import { FiCalendar, FiClock, FiMapPin } from 'react-icons/fi';
 import './profile.css';
 
 const PatientProfile = () => {
+  const { addToast } = useToast();
   const role = localStorage.getItem('userRole');
   const patientId = localStorage.getItem('userId');
 
@@ -47,7 +51,7 @@ const PatientProfile = () => {
   };
 
   // 🔹 API Call to Fetch Appointments
-  const getAppointments = async () => {
+  const getAppointments = useCallback(async () => {
     setAppLoading(true);
     try {
       // Adjusted to use the patientId from localStorage
@@ -58,11 +62,11 @@ const PatientProfile = () => {
     } finally {
       setAppLoading(false);
     }
-  };
+  }, [patientId]);
 
   const handleUpdate = async () => {
     const token = localStorage.getItem('token');
-    if (!token) return alert('Not authenticated');
+    if (!token) return addToast('Not authenticated', 'error');
 
     try {
       setLoading(true);
@@ -72,9 +76,9 @@ const PatientProfile = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setIsEditing(false);
-      alert('Profile updated successfully');
+      addToast('Profile updated successfully', 'success');
     } catch {
-      alert('Update failed');
+      addToast('Update failed', 'error');
     } finally {
       setLoading(false);
     }
@@ -83,7 +87,7 @@ const PatientProfile = () => {
   useEffect(() => {
     getProfile();
     if (patientId) getAppointments();
-  }, [patientId]);
+  }, [patientId, getAppointments]);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -102,14 +106,19 @@ const PatientProfile = () => {
     date ? new Date(date).toISOString().split('T')[0] : '';
 
   if (loading && !profile.name) {
-    return <div className="profile-layout">Loading Profile...</div>;
+    return (
+      <PageLayout role={role}>
+        <div className="page-content">
+          <LoadingState message="Loading profile..." />
+        </div>
+      </PageLayout>
+    );
   }
 
   return (
-    <div className="profile-layout">
-      <Sidebar role={role} />
-
-      <div className="profile-main-content">
+    <PageLayout role={role}>
+      <div className="page-content profile-main-content">
+        {error && <div style={{ marginBottom: 16 }}><Alert type="error">{error}</Alert></div>}
         {/* HEADER */}
         <div className="profile-header">
           <div className="user-banner">
@@ -245,7 +254,7 @@ const PatientProfile = () => {
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

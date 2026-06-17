@@ -19,6 +19,9 @@ exports.startChat = async (req, res) => {
     
     await chat.save();
 
+    const io = req.app.get('io');
+    io?.to(`user:${doctorId}`).emit('request_received', { chatId: chat._id });
+
     res.json({ chat, alreadyExists: false });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
@@ -33,6 +36,12 @@ exports.approveChat = async (req, res) => {
       { status: 'accepted' }, 
       { new: true }
     );
+
+    const io = req.app.get('io');
+    chat?.participants?.forEach((participantId) => {
+      io?.to(`user:${participantId.toString()}`).emit('request_updated', { chatId: chat._id });
+    });
+
     res.json({ message: 'Chat accepted', chat });
   } catch (err) {
     res.status(500).json({ message: 'Error approving chat' });

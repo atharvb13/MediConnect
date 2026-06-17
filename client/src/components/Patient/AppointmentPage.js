@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Sidebar from '../Common/Sidebar';
+import PageLayout from '../Common/PageLayout';
+import Alert from '../Common/Alert';
+import { useToast } from '../Common/ToastContext';
 import Calendar from 'react-calendar';
 import { FiCalendar, FiClock, FiUser, FiChevronLeft, FiAlertCircle } from 'react-icons/fi';
 import 'react-calendar/dist/Calendar.css';
@@ -10,6 +12,7 @@ import './appointment.css';
 const AppointmentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { addToast } = useToast();
   const { doctorId, doctorName } = location.state || {};
   const patientId = localStorage.getItem('userId');
   const role = localStorage.getItem('userRole');
@@ -70,10 +73,10 @@ const AppointmentPage = () => {
         slotId: selectedSlot._id
       });
       setShowModal(false);
-      alert("Appointment successfully booked!");
-      navigate('/my-appointments');
+      addToast('Appointment successfully booked!', 'success');
+      navigate('/patient/profile');
     } catch (err) {
-      alert(err.response?.data?.message || "Booking failed.");
+      addToast(err.response?.data?.message || 'Booking failed.', 'error');
     } finally {
       setIsBooking(false);
     }
@@ -88,10 +91,10 @@ const AppointmentPage = () => {
   };
 
   return (
-    <div className="layout-wrapper appointment-bg">
-      <Sidebar role={role} />
-      <div className="main-content">
-        
+    <PageLayout role={role}>
+      <div className="page-content appointment-bg">
+        {error && <div style={{ marginBottom: 16 }}><Alert type="error">{error}</Alert></div>}
+
         <div className="appointment-hero">
           <button className="back-btn" onClick={() => navigate(-1)}>
             <FiChevronLeft /> Back to Search
@@ -128,7 +131,12 @@ const AppointmentPage = () => {
             </div>
             
             <div className="slots-scroll-area">
-              {slotsForSelectedDate.length > 0 ? (
+              {loading ? (
+                <div className="empty-slots">
+                  <div className="app-spinner" />
+                  <p>Loading availability...</p>
+                </div>
+              ) : slotsForSelectedDate.length > 0 ? (
                 <div className="slots-grid">
                   {slotsForSelectedDate.map((slot) => (
                     <div key={slot._id} className="modern-slot-card">
@@ -185,7 +193,7 @@ const AppointmentPage = () => {
           </div>
         )}
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

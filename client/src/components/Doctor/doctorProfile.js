@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Sidebar from '../Common/Sidebar';
+import PageLayout from '../Common/PageLayout';
+import LoadingState from '../Common/LoadingState';
+import Alert from '../Common/Alert';
+import { useToast } from '../Common/ToastContext';
 import './doctorProfile.css';
 
 const DoctorProfile = () => {
+  const { addToast } = useToast();
   const role = localStorage.getItem('userRole');
-  const doctorId = localStorage.getItem('userId');
 
   const [profile, setProfile] = useState({
     name: '',
@@ -48,7 +51,7 @@ const DoctorProfile = () => {
 
   const handleUpdate = async () => {
     const token = localStorage.getItem('token');
-    if (!token) return alert('Not authenticated');
+    if (!token) return addToast('Not authenticated', 'error');
 
     try {
       setLoading(true);
@@ -58,9 +61,9 @@ const DoctorProfile = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setIsEditing(false);
-      alert('Profile updated successfully');
+      addToast('Profile updated successfully', 'success');
     } catch {
-      alert('Update failed');
+      addToast('Update failed', 'error');
     } finally {
       setLoading(false);
     }
@@ -86,14 +89,19 @@ const DoctorProfile = () => {
     date ? new Date(date).toISOString().split('T')[0] : '';
 
   if (loading && !profile.name) {
-    return <div className="profile-layout">Loading Profile...</div>;
+    return (
+      <PageLayout role={role}>
+        <div className="page-content">
+          <LoadingState message="Loading profile..." />
+        </div>
+      </PageLayout>
+    );
   }
 
   return (
-    <div className="profile-layout">
-      <Sidebar role={role} />
-
-      <div className="profile-main-content">
+    <PageLayout role={role}>
+      <div className="page-content profile-main-content">
+        {error && <div style={{ marginBottom: 16 }}><Alert type="error">{error}</Alert></div>}
         {/* HEADER */}
         <div className="profile-header">
           <div className="user-banner">
@@ -219,7 +227,7 @@ const DoctorProfile = () => {
           {/* No appointments section for doctor */}
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

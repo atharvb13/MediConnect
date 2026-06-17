@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import './chat.css';
 import io from 'socket.io-client';
@@ -11,17 +11,36 @@ const Chat = ({ status, chatId, userId, otherUserName }) => {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  useEffect(() => {
-  if (chatId) {
-    socket.emit('join_chat', chatId);
-    fetchMessages();
-  }
-  socket.on('receive_message', (msg) => {
-    setMessages((prev) => [...prev, msg]);
+  const scrollToBottom = useCallback(() => {
+    setTimeout(() => {
+      if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  }, []);
+
+  const fetchMessages = useCallback(async () => {
+    if (!chatId) return;
+    setLoading(true);
+    try {
+      const res = await axios.get(`http://localhost:5001/api/chat/${chatId}/messages`);
+      setMessages(res.data.messages);
+    } catch (err) {
+      setMessages([]);
+    }
+    setLoading(false);
     scrollToBottom();
-  });
-  return () => socket.off('receive_message');
-}, [chatId]);
+  }, [chatId, scrollToBottom]);
+
+  useEffect(() => {
+    if (chatId) {
+      socket.emit('join_chat', chatId);
+      fetchMessages();
+    }
+    socket.on('receive_message', (msg) => {
+      setMessages((prev) => [...prev, msg]);
+      scrollToBottom();
+    });
+    return () => socket.off('receive_message');
+  }, [chatId, fetchMessages, scrollToBottom]);
 
 const sendMessage = async () => {
   if (!input.trim() || status !== 'accepted') return;
@@ -37,29 +56,10 @@ const sendMessage = async () => {
       setInput('');
       fetchMessages();
     } catch (err) {}
-};
-
-  const fetchMessages = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(`http://localhost:5001/api/chat/${chatId}/messages`);
-      setMessages(res.data.messages);
-    } catch (err) {
-      setMessages([]);
-    }
-    setLoading(false);
-    scrollToBottom();
   };
-
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') sendMessage();
-  };
-
-  const scrollToBottom = () => {
-    setTimeout(() => {
-      if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
   };
 
   return (

@@ -1,9 +1,17 @@
 import React, { useCallback, useState } from "react";
-import Sidebar from "../../Common/Sidebar";
+import PageLayout from "../../Common/PageLayout";
+import StepIndicator from "../../Common/StepIndicator";
+import Alert from "../../Common/Alert";
 import FileUpload from "./FileUpload";
 import ResultsDashboard from "./ResultsDashboard";
 import { analyzeChart } from "./api";
 import "./ClinicalCopilot.css";
+
+const STEPS = [
+  { id: "upload", label: "Upload" },
+  { id: "analyzing", label: "Analyze" },
+  { id: "results", label: "Results" },
+];
 
 const ANALYSIS_STEPS = [
   "Extracting clinical sections...",
@@ -46,36 +54,44 @@ export default function ClinicalCopilot({ role = "patient" }) {
   }, []);
 
   return (
-    <div className="cc-layout">
-      <Sidebar role={role} />
+    <PageLayout role={role}>
       <div className="cc-page">
         <div className="cc-container">
           <header className="cc-header">
             <div className="cc-headerRow">
-              <div className="cc-logo">AI</div>
+              <div className="cc-logo" aria-hidden="true">AI</div>
               <div>
                 <h1 className="cc-title">Clinical Copilot</h1>
-                <p className="cc-subtitle">Multi-agent chart analysis</p>
+                <p className="cc-subtitle">Multi-agent chart analysis for clinical decision support</p>
               </div>
             </div>
             <div className="cc-headerActions">
               {step !== "upload" && (
-                <button type="button" className="cc-btn" onClick={handleReset}>
+                <button type="button" className="app-btn" onClick={handleReset}>
                   Start over
                 </button>
               )}
-              <span className="cc-muted">5 parallel agents</span>
+              <span className="cc-badge">5 agents</span>
             </div>
           </header>
 
-          <div className="cc-disclaimer">
-            This tool is for informational purposes only and does not replace professional medical advice.
-          </div>
+          <StepIndicator steps={STEPS} currentStep={step} />
+
+          <Alert type="warning">
+            For informational purposes only — does not replace professional medical advice.
+          </Alert>
 
           {step === "upload" && (
             <div className="cc-card">
               <h2 className="cc-sectionTitle">Upload Clinical Document</h2>
-              {error && <p className="cc-errorText" style={{ marginBottom: 12 }}>{error}</p>}
+              <p className="cc-muted cc-cardDesc">
+                Upload patient charts, lab results, or clinical notes. Analysis begins automatically after normalization.
+              </p>
+              {error && (
+                <div style={{ marginBottom: 14 }}>
+                  <Alert type="error" onDismiss={() => setError("")}>{error}</Alert>
+                </div>
+              )}
               <FileUpload
                 patientId={patientId}
                 onPatientIdChange={setPatientId}
@@ -86,8 +102,8 @@ export default function ClinicalCopilot({ role = "patient" }) {
           )}
 
           {step === "analyzing" && (
-            <div className="cc-card cc-loadingCard">
-              <div className="cc-spinner" />
+            <div className="cc-card cc-loadingCard" role="status" aria-live="polite" aria-busy="true">
+              <div className="app-spinner" />
               <div className="cc-loadingText">
                 <p className="cc-loadingTitle">Running 5 parallel agents</p>
                 <p className="cc-muted">
@@ -95,6 +111,7 @@ export default function ClinicalCopilot({ role = "patient" }) {
                     ? `Analyzing ${filenames.join(", ")}`
                     : "Ingestion · Medication · Timeline · Risk · Synthesis"}
                 </p>
+                <p className="cc-muted cc-loadingHint">This may take 15–60 seconds depending on chart size.</p>
               </div>
               <div className="cc-loadingSteps">
                 {ANALYSIS_STEPS.map((label, i) => (
@@ -107,9 +124,14 @@ export default function ClinicalCopilot({ role = "patient" }) {
             </div>
           )}
 
-          {step === "results" && result && <ResultsDashboard result={result} />}
+          {step === "results" && result && (
+            <>
+              <Alert type="success">Analysis complete — review reports and risk flags below.</Alert>
+              <ResultsDashboard result={result} onNewAnalysis={handleReset} />
+            </>
+          )}
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

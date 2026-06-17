@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from '../Common/Sidebar';
+import PageLayout from '../Common/PageLayout';
+import Alert from '../Common/Alert';
+import EmptyState from '../Common/EmptyState';
+import { useToast } from '../Common/ToastContext';
 import './findDoctor.css';
 
 const FindDoctor = () => {
   const navigate = useNavigate();
+  const { addToast } = useToast();
   const patientId = localStorage.getItem('userId');
   const role = localStorage.getItem('userRole');
 
@@ -55,29 +59,29 @@ const FindDoctor = () => {
 
       // 2. If chat is pending, notify user
       if (alreadyExists && chat.status === 'pending') {
-        alert("You already have a pending request with this doctor.");
+        addToast('You already have a pending request with this doctor.', 'warning');
         return;
       }
 
-      const confirmSend = window.confirm("Would you like to send a chat request to this doctor?");
-      if (confirmSend) {
-        alert("Request sent successfully!");
-        navigate('/chats');
-      }
+      addToast('Chat request sent successfully!', 'success');
+      navigate('/chats');
     } catch (err) {
-      alert("Error initiating chat.");
+      addToast('Error initiating chat.', 'error');
     }
   };
 
+  const filteredDoctors = doctors.filter(doc =>
+    (profession === '' || doc.profession === profession) &&
+    (search === '' || doc.name.toLowerCase().includes(search.toLowerCase()))
+  );
+
   return (
-    <div className="layout-wrapper">
-      <Sidebar role={role} />
-      
-      <div className="main-content">
+    <PageLayout role={role}>
+      <div className="page-content">
         <div className="find-doctor-page">
-          <header className="page-header">
-            <h1 className="page-title">Find a Specialist</h1>
-            <p className="page-subtitle">Connect with top-rated doctors in your area</p>
+          <header className="page-content-header">
+            <h1>Find a Specialist</h1>
+            <p>Connect with top-rated doctors in your area</p>
           </header>
 
           <section className="filter-section">
@@ -124,13 +128,10 @@ const FindDoctor = () => {
             </div>
           </section>
 
-          {error && <div className="error-banner">{error}</div>}
+          {error && <div style={{ marginBottom: 16 }}><Alert type="error">{error}</Alert></div>}
 
           <div className="doctor-grid">
-            {doctors.filter(doc => 
-              (profession === '' || doc.profession === profession) &&
-              (search === '' || doc.name.toLowerCase().includes(search.toLowerCase()))
-            ).map(doc => (
+            {filteredDoctors.map(doc => (
               <div className="modern-doctor-card" key={doc._id}>
                 <div className="card-top">
                   <div className="doc-avatar">{doc.name.charAt(0)}</div>
@@ -159,11 +160,15 @@ const FindDoctor = () => {
           </div>
 
           {!loading && doctors.length === 0 && (
-            <div className="empty-state">Enter your zip code to find doctors nearby.</div>
+            <EmptyState
+              icon="🔍"
+              title="No doctors found"
+              description="Enter your zip code and search to find doctors nearby."
+            />
           )}
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

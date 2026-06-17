@@ -1,5 +1,5 @@
 // frontend/src/components/Auth/Register.js
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import './register.css';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -9,11 +9,13 @@ const Register = () => {
   const location = useLocation();
 
   /* ---------- Google detection ---------- */
-  const params = new URLSearchParams(location.search);
+  const params = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const isGoogleUser = params.get('google') === 'true';
-  const googleData = isGoogleUser
-    ? JSON.parse(decodeURIComponent(params.get('data')))
-    : null;
+  const googleData = useMemo(() => (
+    isGoogleUser
+      ? JSON.parse(decodeURIComponent(params.get('data')))
+      : null
+  ), [isGoogleUser, params]);
 
   /* ---------- State ---------- */
   const [userType, setUserType] = useState('patient');
@@ -24,7 +26,7 @@ const Register = () => {
   const [zip, setZip] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
-  const [country, setCountry] = useState('United States');
+  const [country] = useState('United States');
   const [password, setPassword] = useState('');
 
   // Doctor
@@ -50,7 +52,7 @@ const Register = () => {
       setName(googleData.name);
       setOtpVerified(true); // skip OTP
     }
-  }, []);
+  }, [googleData, isGoogleUser]);
 
   /* ---------- ZIP lookup ---------- */
   const handleZipBlur = async () => {
@@ -162,8 +164,8 @@ const Register = () => {
         <div className="register-form">
 
           <div className="logo-icon">
-            <img src="/logo_medi.png" />
-            <img className="logo" src="/medi_icon2.png" />
+            <img src="/logo_medi.png" alt="MediConnect" />
+            <img className="logo" src="/medi_icon2.png" alt="" />
           </div>
 
           <div className="user-type-toggle">
@@ -210,6 +212,7 @@ const Register = () => {
                 <img
                   src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg"
                   className="google-icon"
+                  alt=""
                 />
                 Sign In with Google
               </button>

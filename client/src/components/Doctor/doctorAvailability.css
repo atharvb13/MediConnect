@@ -1,9 +1,9 @@
 :root {
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --bg-main: #f8fafc;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
+  --primary: #0f766e;
+  --primary-hover: #0b5f59;
+  --bg-main: #f6f8fb;
+  --text-main: #172033;
+  --text-muted: #667085;
   --white: #ffffff;
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }

@@ -1,21 +1,15 @@
 :root {
-  --primary: #7a47f4;
-  --bg: #f7f4fd;
+  --primary: #0f766e;
+  --primary-light: #e6f4f1;
+  --bg: #f6f8fb;
   --card-bg: #ffffff;
-  --text-dark: #1e293b;
-  --text-light: #64748b;
-  --border: #e2e8f0;
-}
-
-.profile-layout {
-  display: flex;
-  background-color: var(--bg);
-  min-height: 100vh;
+  --text-dark: #172033;
+  --text-light: #667085;
+  --border: #d9e0ea;
 }
 
 .profile-main-content {
-  flex: 1;
-  padding: 40px;
+  /* padding handled by .page-content */
 }
 
 /* Header Banner */

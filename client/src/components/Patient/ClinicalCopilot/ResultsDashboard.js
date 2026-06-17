@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import FlagBadge from "./FlagBadge";
 import ReportPanel from "./ReportPanel";
 
-export default function ResultsDashboard({ result }) {
+export default function ResultsDashboard({ result, onNewAnalysis }) {
   const [showMeds, setShowMeds] = useState(false);
   const [showTimeline, setShowTimeline] = useState(false);
   const [activeTab, setActiveTab] = useState("doctor");
@@ -12,6 +12,15 @@ export default function ResultsDashboard({ result }) {
 
   return (
     <div className="cc-results">
+      <div className="cc-resultsHeader">
+        <h2 className="cc-sectionTitle">Analysis Results</h2>
+        {onNewAnalysis && (
+          <button type="button" className="app-btn" onClick={onNewAnalysis}>
+            New analysis
+          </button>
+        )}
+      </div>
+
       {highFlags.length > 0 && (
         <div className="cc-alertBox">
           <h2 className="cc-sectionTitle">

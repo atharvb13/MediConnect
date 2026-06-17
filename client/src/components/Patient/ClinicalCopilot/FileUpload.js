@@ -1,5 +1,8 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { FiUploadCloud, FiFile, FiCheck, FiAlertCircle, FiLoader } from "react-icons/fi";
+import EmptyState from "../../Common/EmptyState";
+import Alert from "../../Common/Alert";
 import { uploadFile, normalizeText } from "./api";
 
 const ACCEPTED_TYPES = {
@@ -41,7 +44,7 @@ export default function FileUpload({ patientId, onPatientIdChange, onReady, role
         )
       );
     }
-  }, []);
+  }, [role]);
 
   const handleDrop = useCallback(
     (accepted) => {
@@ -114,36 +117,52 @@ export default function FileUpload({ patientId, onPatientIdChange, onReady, role
   return (
     <div className="cc-upload">
       <div className="cc-patientIdRow">
-        <label className="cc-label">Patient ID</label>
+        <label className="cc-label" htmlFor="patient-id">Patient ID</label>
         <input
+          id="patient-id"
           type="text"
           value={patientId}
           onChange={(e) => onPatientIdChange(e.target.value)}
           className="cc-input cc-input-sm"
           placeholder="PATIENT-001"
           disabled={normalizing}
+          aria-describedby="patient-id-hint"
         />
+        <span id="patient-id-hint" className="cc-muted cc-hint">Used to tag this analysis session</span>
       </div>
 
       <div
         {...getRootProps()}
         className={`cc-dropzone ${isDragActive ? "active" : ""} ${normalizing ? "disabled" : ""}`}
+        role="button"
+        aria-label="Upload clinical documents"
       >
-        <input {...getInputProps()} />
+        <input {...getInputProps()} aria-label="Choose files" />
         <div className="cc-dropzoneInner">
-          <div className="cc-dropzoneIcon">📄</div>
+          <FiUploadCloud className="cc-dropzoneIconSvg" aria-hidden="true" />
           <p className="cc-dropzoneTitle">
             {isDragActive ? "Drop files here" : "Drop clinical documents here"}
           </p>
-          <p className="cc-muted">or click to browse — PDF, DOCX, MD, TXT</p>
+          <p className="cc-muted">or click to browse — PDF, DOCX, MD, TXT (max 10 MB each)</p>
           <div className="cc-formatTags">
             {["PDF", "DOCX", "MD", "TXT"].map((t) => (
               <span key={t} className="cc-formatTag">{t}</span>
             ))}
           </div>
-          <p className="cc-muted">Upload multiple files — radiology reports, lab results, clinical notes</p>
         </div>
       </div>
+
+      {normalizeError && (
+        <Alert type="error" onDismiss={() => setNormalizeError("")}>{normalizeError}</Alert>
+      )}
+
+      {files.length === 0 && !normalizing && (
+        <EmptyState
+          icon="📋"
+          title="No files uploaded yet"
+          description="Drop clinical documents above to extract and analyze patient chart data."
+        />
+      )}
 
       {files.length > 0 && (
         <div className="cc-fileList">
@@ -160,11 +179,11 @@ export default function FileUpload({ patientId, onPatientIdChange, onReady, role
           <ul className="cc-fileItems">
             {files.map((entry) => (
               <li key={entry.id} className="cc-fileItem">
-                <span className="cc-fileStatus">
-                  {entry.status === "extracting" && "⏳"}
-                  {entry.status === "ready" && "✓"}
-                  {entry.status === "error" && "✕"}
-                  {entry.status === "pending" && "○"}
+                <span className="cc-fileStatus" aria-label={entry.status}>
+                  {entry.status === "extracting" && <FiLoader className="cc-spin" />}
+                  {entry.status === "ready" && <FiCheck className="cc-status-ok" />}
+                  {entry.status === "error" && <FiAlertCircle className="cc-status-err" />}
+                  {entry.status === "pending" && <FiFile />}
                 </span>
                 <div className="cc-fileMeta">
                   <p className="cc-fileName">{entry.file.name}</p>
@@ -183,6 +202,7 @@ export default function FileUpload({ patientId, onPatientIdChange, onReady, role
                   className="cc-fileRemove"
                   onClick={() => removeFile(entry.id)}
                   disabled={normalizing}
+                  aria-label={`Remove ${entry.file.name}`}
                 >
                   ×
                 </button>
@@ -191,7 +211,6 @@ export default function FileUpload({ patientId, onPatientIdChange, onReady, role
           </ul>
 
           <div className="cc-fileListFooter">
-            {normalizeError && <p className="cc-errorText">{normalizeError}</p>}
             {processingCount > 0 && (
               <span className="cc-muted">
                 Waiting for {processingCount} file{processingCount > 1 ? "s" : ""}...
@@ -199,9 +218,10 @@ export default function FileUpload({ patientId, onPatientIdChange, onReady, role
             )}
             <button
               type="button"
-              className="cc-btnPrimary"
+              className="app-btn app-btn-primary"
               onClick={handleSend}
               disabled={!canSend}
+              aria-busy={normalizing}
             >
               {normalizing ? "Normalizing & analyzing..." : "Send to InputAgent & Analyze →"}
             </button>

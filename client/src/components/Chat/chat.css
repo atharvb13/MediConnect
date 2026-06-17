@@ -1,11 +1,11 @@
 :root {
-  --bg: #f7f4fd;
+  --bg: #f6f8fb;
   --card: #ffffff;
-  --border: #e0d7f7;
-  --text: #222;
-  --muted: #8a8a8a;
-  --primary: #7a47f4;
-  --primary2: #a084e8;
+  --border: #d9e0ea;
+  --text: #172033;
+  --muted: #667085;
+  --primary: #0f766e;
+  --primary2: #3657c8;
 }
 
 .chat-container {

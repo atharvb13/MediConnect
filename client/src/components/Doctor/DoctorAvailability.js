@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import axios from 'axios';
-import Sidebar from '../Common/Sidebar';
+import PageLayout from '../Common/PageLayout';
+import { useToast } from '../Common/ToastContext';
 import { FiClock, FiPlus, FiX } from 'react-icons/fi';
 import 'react-calendar/dist/Calendar.css';
 import './doctorAvailability.css';
@@ -12,6 +13,7 @@ const DEFAULT_TIMES = [
 ];
 
 const DoctorAvailability = ({ userId }) => {
+  const { addToast } = useToast();
   const role = localStorage.getItem('userRole');
   const doctorId = userId || localStorage.getItem('userId');
 
@@ -146,19 +148,21 @@ const DoctorAvailability = ({ userId }) => {
       slots: fullSlots
     });
 
-    alert("Availability updated successfully!");
+    addToast('Availability updated successfully!', 'success');
     setAvailabilitySlots([]);
   } catch (err) {
     console.error("Error saving slots:", err);
-    alert("Failed to save slots.");
+    addToast('Failed to save slots.', 'error');
   }
 };
 
   return (
-    <div className="profile-layout">
-      <Sidebar role={role} />
-
-      <div className="profile-main-content">
+    <PageLayout role={role}>
+      <div className="page-content profile-main-content">
+        <div className="page-content-header">
+          <h1>Appointments & Availability</h1>
+          <p>Manage your schedule and view upcoming patient visits</p>
+        </div>
         <div className="dashboard-grid">
           {/* Left Column: Appointments */}
           <div className="appointments-section">
@@ -280,7 +284,7 @@ const DoctorAvailability = ({ userId }) => {
           
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

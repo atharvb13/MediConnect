@@ -1,96 +1,101 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useToast } from '../Common/ToastContext';
 import './register.css';
 
+const HOME_ROUTES = {
+  admin: '/admin',
+  doctor: '/doctor/profile',
+  patient: '/patient/profile',
+};
+
 const Login = () => {
+  const navigate = useNavigate();
+  const { addToast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e?.preventDefault();
+    if (!email || !password) return;
+
     setLoading(true);
     setError('');
-    setMessage('');
 
     try {
-      const res = await axios.post(
-        'http://localhost:5001/api/auth/login',
-        { email, password }
-      );
-
+      const res = await axios.post('http://localhost:5001/api/auth/login', { email, password });
       const { token, user } = res.data;
 
       localStorage.setItem('token', token);
       localStorage.setItem('userId', user._id);
       localStorage.setItem('userRole', user.role);
-      localStorage.setItem('zip', user.zip);
+      localStorage.setItem('zip', user.zip || '');
 
-      setMessage('Login successful! Redirecting...');
+      addToast('Welcome back! Redirecting...', 'success', 2000);
 
       setTimeout(() => {
-        if (user.role === 'admin') {
-          window.location.href = '/admin';
-        } else {
-          window.location.href = '/chats';
-        }
-      }, 1200);
-
+        navigate(HOME_ROUTES[user.role] || '/chats');
+      }, 800);
     } catch (err) {
-      const msg = err.response?.data?.message || 'Login failed';
+      const msg = err.response?.data?.message || 'Login failed. Check your credentials.';
       setError(msg);
+      addToast(msg, 'error');
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
     <div className="register-container">
-      <div className="register-left"></div>
+      <div className="register-left" aria-hidden="true" />
 
       <div className="register-right">
-        <div className="register-form">
-
+        <form className="register-form" onSubmit={handleLogin} noValidate>
           <div className="logo-icon">
-            <img src="/logo_medi.png" />
-            <img className="logo" src="/medi_icon2.png" />
+            <img src="/logo_medi.png" alt="MediConnect logo" />
+            <img className="logo" src="/medi_icon2.png" alt="" />
           </div>
 
           <h2>Login to Your Account</h2>
-
-          {message && (
-            <div style={{ color: '#2e7d32', marginBottom: 10, fontWeight: 500 }}>
-              {message}
-            </div>
-          )}
+          <p className="auth-subtitle">Access appointments, messages, and Clinical Copilot</p>
 
           {error && (
-            <div style={{ color: '#d32f2f', marginBottom: 10, fontWeight: 500 }}>
+            <div className="app-alert app-alert-error auth-alert" role="alert">
               {error}
             </div>
           )}
 
+          <label className="form-label" htmlFor="email">Email</label>
           <input
+            id="email"
             type="email"
-            placeholder="Email"
+            placeholder="you@example.com"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             disabled={loading}
             autoFocus
+            autoComplete="email"
+            required
           />
 
+          <label className="form-label" htmlFor="password">Password</label>
           <input
+            id="password"
             type="password"
-            placeholder="Password"
+            placeholder="Enter your password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             disabled={loading}
+            autoComplete="current-password"
+            required
           />
 
           <button
+            type="submit"
             className="submit-btn"
-            onClick={handleLogin}
             disabled={loading || !email || !password}
           >
             {loading ? 'Logging in...' : 'Login'}
@@ -101,24 +106,23 @@ const Login = () => {
           </div>
 
           <button
+            type="button"
             className="google-btn"
-            onClick={() =>
-              window.location.href = 'http://localhost:5001/api/auth/google'
-            }
+            onClick={() => { window.location.href = 'http://localhost:5001/api/auth/google'; }}
+            disabled={loading}
           >
             <img
               src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg"
-              alt="Google"
+              alt=""
               className="google-icon"
             />
             Sign in with Google
           </button>
 
           <p className="login-link">
-            Don't have an account? <a href="/register">Register</a>
+            Don&apos;t have an account? <Link to="/register">Register</Link>
           </p>
-
-        </div>
+        </form>
       </div>
     </div>
   );

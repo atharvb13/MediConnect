@@ -1,0 +1,205 @@
+/* MediConnect Design System */
+:root {
+  --primary: #0f766e;
+  --primary-hover: #0b5f59;
+  --primary-light: #e6f4f1;
+  --primary-muted: #b9ded8;
+  --accent: #3657c8;
+  --accent-light: #eef2ff;
+  --bg: #f6f8fb;
+  --surface: #ffffff;
+  --surface-muted: #f9fafb;
+  --text: #172033;
+  --text-muted: #667085;
+  --border: #d9e0ea;
+  --success: #15803d;
+  --success-bg: #ecfdf3;
+  --warning: #b45309;
+  --warning-bg: #fffbeb;
+  --error: #b42318;
+  --error-bg: #fef3f2;
+  --info: #175cd3;
+  --info-bg: #eff8ff;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 8px;
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --shadow-md: 0 10px 24px rgba(16, 24, 40, 0.08);
+  --shadow-lg: 0 18px 48px rgba(16, 24, 40, 0.12);
+  --transition: 0.18s ease;
+  --font: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --sidebar-width: 268px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(15, 118, 110, 0.08), transparent 32rem),
+    linear-gradient(180deg, #fbfcfe 0%, var(--bg) 42%);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, p {
+  margin: 0;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button, input, textarea, select {
+  font-family: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(15, 118, 110, 0.22);
+  outline-offset: 2px;
+}
+
+input, textarea, select {
+  color: var(--text);
+}
+
+::placeholder {
+  color: #98a2b3;
+}
+
+/* Shared utilities */
+.app-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  line-height: 1.5;
+  border: 1px solid;
+}
+
+.app-alert-error {
+  background: var(--error-bg);
+  border-color: #fecdca;
+  color: #912018;
+}
+
+.app-alert-success {
+  background: var(--success-bg);
+  border-color: #abefc6;
+  color: #05603a;
+}
+
+.app-alert-warning {
+  background: var(--warning-bg);
+  border-color: #fedf89;
+  color: #93370d;
+}
+
+.app-alert-info {
+  background: var(--info-bg);
+  border-color: #b2ddff;
+  color: #1849a9;
+}
+
+.app-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 9px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 650;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), color var(--transition), box-shadow var(--transition), transform var(--transition);
+}
+
+.app-btn:hover:not(:disabled) {
+  background: var(--primary-light);
+  border-color: var(--primary-muted);
+  color: var(--primary-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.app-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.app-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.app-btn-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.app-btn-primary:hover:not(:disabled) {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  color: white;
+}
+
+.app-btn-ghost {
+  background: transparent;
+  border-color: transparent;
+}
+
+.app-btn-ghost:hover:not(:disabled) {
+  background: var(--primary-light);
+}
+
+.app-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--primary-muted);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: app-spin 0.8s linear infinite;
+}
+
+@keyframes app-spin {
+  to { transform: rotate(360deg); }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

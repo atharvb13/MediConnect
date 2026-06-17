@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 
 // Components & Styles
 import Chat from '../Chat/Chat';
-import Sidebar from '../Common/Sidebar';
-import '../Doctor/dashboard.css';
+import PageLayout from '../Common/PageLayout';
+import { useToast } from '../Common/ToastContext';
 import '../Chat/chat.css';
 import './chatlist.css';
 
@@ -14,7 +13,7 @@ import './chatlist.css';
 const socket = io.connect("http://localhost:5001");
 
 const ChatList = () => {
-  const navigate = useNavigate();
+  const { addToast } = useToast();
   
   // Auth & User State
   const role = localStorage.getItem('userRole'); 
@@ -26,35 +25,12 @@ const ChatList = () => {
   const [otherUserName, setOtherUserName] = useState('');
   const [search, setSearch] = useState('');
 
-  // 1. Initial Load & Auth Check
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/');
-    } else {
-      fetchChats();
+  const fetchChats = useCallback(async () => {
+    if (!userId) {
+      setChats([]);
+      return;
     }
-  }, [userId, navigate]);
 
-  // 2. Real-time Socket Listeners
-  useEffect(() => {
-    if (userId) {
-      // Join a private room for this specific user to receive notifications
-      socket.emit('join_user_room', userId); 
-      
-      // Refresh list if a new request is sent to this user or an existing one is accepted
-      socket.on('request_received', () => fetchChats());
-      socket.on('request_updated', () => fetchChats());
-
-      return () => {
-        socket.off('request_received');
-        socket.off('request_updated');
-      };
-    }
-  }, [userId]);
-
-  // 3. Fetch Chats (Expects backend to use .populate('participants'))
-  const fetchChats = async () => {
     try {
       const res = await axios.get(`http://localhost:5001/api/chat/user/${userId}`);
       setChats(res.data.chats);
@@ -62,7 +38,24 @@ const ChatList = () => {
       console.error("Error fetching chats:", err);
       setChats([]);
     }
-  };
+  }, [userId]);
+
+  useEffect(() => {
+    fetchChats();
+  }, [fetchChats]);
+
+  useEffect(() => {
+    if (!userId) return undefined;
+
+    socket.emit('join_user_room', userId);
+    socket.on('request_received', fetchChats);
+    socket.on('request_updated', fetchChats);
+
+    return () => {
+      socket.off('request_received', fetchChats);
+      socket.off('request_updated', fetchChats);
+    };
+  }, [fetchChats, userId]);
 
   // 4. Handle Chat Selection (Extracts name from populated participants)
   const handleSelectChat = (chat) => {
@@ -90,10 +83,11 @@ const ChatList = () => {
       // Notify the other user via socket that the status has changed
       socket.emit('accept_request', { chatId });
       
-      fetchChats(); // Refresh local UI
-      alert("Chat request accepted!");
+      fetchChats();
+      addToast('Chat request accepted!', 'success');
     } catch (err) {
       console.error("Approval failed", err);
+      addToast('Failed to approve chat request', 'error');
     }
   };
 
@@ -107,11 +101,9 @@ const ChatList = () => {
   });
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)' }}>
-      <Sidebar role={role} />
-      
-      <div style={{ flex: 1 }}>
-        <div className="patient-dashboard-container chat-page">
+    <PageLayout role={role}>
+      <div className="page-content chat-page-content">
+        <div className="chat-page">
           <div className="chat-page-header">
             <div className="chat-page-title">Messages</div>
           </div>
@@ -207,7 +199,7 @@ const ChatList = () => {
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

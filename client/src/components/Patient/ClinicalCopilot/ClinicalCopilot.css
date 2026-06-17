@@ -1,29 +1,19 @@
-:root {
-  --cc-primary: #7a47f4;
-  --cc-bg: #e0d7f7;
-  --cc-accent: #a084e8;
-  --cc-text: #1f1b2e;
-  --cc-white: #ffffff;
-}
-
-.cc-layout {
-  display: flex;
-  min-height: 100vh;
-  background: var(--cc-bg);
-}
-
 .cc-page {
-  flex: 1;
   min-height: 100vh;
-  background: linear-gradient(180deg, var(--cc-bg) 0%, #ffffff 60%);
-  color: var(--cc-text);
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background: linear-gradient(180deg, var(--primary-muted) 0%, #ffffff 60%);
+  color: var(--text);
 }
 
 .cc-container {
   max-width: 1100px;
   margin: 0 auto;
   padding: 32px 20px 48px;
+}
+
+@media (max-width: 900px) {
+  .cc-container {
+    padding: 72px 16px 40px;
+  }
 }
 
 .cc-header {
@@ -73,14 +63,17 @@
   gap: 12px;
 }
 
-.cc-disclaimer {
-  margin-top: 14px;
-  padding: 12px;
-  border-radius: 14px;
-  background: var(--cc-bg);
-  border: 1px solid var(--cc-accent);
+.cc-badge {
   font-size: 12px;
-  color: #3d3560;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.cc-cardDesc {
+  margin: -4px 0 16px;
 }
 
 .cc-card {
@@ -213,9 +206,34 @@
   pointer-events: none;
 }
 
-.cc-dropzoneIcon {
-  font-size: 28px;
+.cc-dropzoneIconSvg {
+  font-size: 36px;
+  color: var(--primary);
   margin-bottom: 8px;
+}
+
+.cc-hint {
+  font-size: 12px;
+}
+
+.cc-spin {
+  animation: cc-spin 0.9s linear infinite;
+}
+
+.cc-status-ok { color: var(--success); }
+.cc-status-err { color: var(--error); }
+
+.cc-loadingHint {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.cc-resultsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .cc-dropzoneTitle {
